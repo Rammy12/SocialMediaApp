@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.urls import path
-from app.serializers import UserSerializer
-from app.views.user import CreateUser
+from app.views import UserResistration,UserLogin
 
 urlpatterns = [
-    path('/user', admin.site.urls),
+    path('register/', UserResistration.as_view(),name='register'),
+    path('login/', UserLogin.as_view(),name='Login'),
 ]

@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'rest_framework',
-    #'rest_framework_simplejwt',
+    'rest_framework_simplejwt',
 ]
 # 'corsheaders.middleware.CorsMiddleware',
 MIDDLEWARE = [

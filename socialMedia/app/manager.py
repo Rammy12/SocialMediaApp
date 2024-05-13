@@ -11,12 +11,8 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password,**kwargs):
-        """
-        Creates and saves a superuser with the given email, date of
-        birth and password.
-        """
         kwargs.setdefault('is_active',True)
-        kwargs.setdefault('is_staff',False)
+        kwargs.setdefault('is_staff',True)
         kwargs.setdefault('is_superuser',True)
 
         if kwargs.get('is_staff') is not True:
