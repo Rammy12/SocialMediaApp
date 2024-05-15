@@ -1,4 +1,4 @@
-from app.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer
+from app.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,UserChangePasswordSerializer
 from app.models import User
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -54,4 +54,7 @@ class UserProfile(APIView):
 class UserChangePassword(APIView):
     permission_classes=[IsAuthenticated]
     def post(self,request):
-        pass
+        serializer=UserChangePasswordSerializer(data=request.data,context={'user':request.user})
+        if serializer.is_valid():
+            return Response({"msg":"Password Change Successfully"},status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

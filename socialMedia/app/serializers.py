@@ -29,3 +29,21 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
         fields=['id','first_name','last_name','username','email','bio']
+
+
+class UserChangePasswordSerializer(serializers.ModelSerializer):
+    password=serializers.CharField(max_length=255,write_only=True)
+    password2=serializers.CharField(max_length=255,write_only=True)
+    class Meta:
+        model=User
+        fields=['password','password2']
+
+    def validate(self,validated_data):
+        password=validated_data['password']
+        password2=validated_data['password2']
+        user=self.context['user']
+        if password!=password2:
+            raise serializers.ValidationError('Password and Conform Password does not match')
+        user.set_password(password)
+        user.save()
+        return validated_data
