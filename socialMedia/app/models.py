@@ -37,14 +37,3 @@ class User(AbstractBaseUser):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
-    
-
-##-----------------------------------------------------------------------------------------------------------------##
-### New Table for post
-
-class Post(models.Model):
-    title=models.CharField(max_length=64)
-    description=models.CharField(max_length=164)
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
-    user=models.ForeignKey(User,null=False,on_delete=models.SET_NULL)
