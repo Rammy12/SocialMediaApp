@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app.models import User
+from app.models import User,UserFollow
 from django.contrib.auth.hashers import make_password
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,3 +47,10 @@ class UserChangePasswordSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return validated_data
+    
+
+
+class UserFollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=UserFollow
+        fields = '__all__'

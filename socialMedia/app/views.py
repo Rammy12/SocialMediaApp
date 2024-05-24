@@ -1,11 +1,12 @@
-from app.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,UserChangePasswordSerializer
-from app.models import User
+from app.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,UserChangePasswordSerializer,UserFollowSerializer
+from app.models import User,UserFollow
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
+from django.core.exceptions import ObjectDoesNotExist
 
 # for genetaing tokens
 def get_tokens_for_user(user):
@@ -58,3 +59,20 @@ class UserChangePassword(APIView):
         if serializer.is_valid():
             return Response({"msg":"Password Change Successfully"},status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+
+class UserFollowView(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self,request,pk):
+        try:
+            following_user=User.objects.get(pk=pk)
+            #serializer=UserFollowSerializer
+            follow_user=UserFollow.objects.get_or_create(user=request.user,follows=following_user)
+            if not follow_user[1]:
+                follow_user[0].delete()
+                return Response({"msg":"Followed user"},status=status.HTTP_200_OK)
+            else:
+                return Response({"msg":"Unfollowed user"},status=status.HTTP_200_OK)
+
+        except ObjectDoesNotExist:
+            return Response({"error": "User not Exist"}, status=status.HTTP_404_NOT_FOUND)

@@ -37,3 +37,9 @@ class User(AbstractBaseUser):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
+
+
+
+class UserFollow(models.Model):
+    user=models.ForeignKey(User,null=False,on_delete=models.CASCADE,related_name="src_follow")
+    follows=models.ForeignKey(User,null=False,on_delete=models.CASCADE,related_name="Dest_Follow")

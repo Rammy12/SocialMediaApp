@@ -7,8 +7,8 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
-from Post.serializers import PostSerializer
-from Post.models import Post,PostLike
+from Post.serializers import PostSerializer,PostCommentSerializer,PostLikeSerializer
+from Post.models import Post,PostLike,postComment
 from django.core.exceptions import ObjectDoesNotExist
 
 
@@ -28,9 +28,6 @@ class PostView(APIView):
         posts=Post.objects.filter(user=user)
         serializer=PostSerializer(posts,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
-
-
-
 
 
 class PostDetailView(APIView):
@@ -66,7 +63,7 @@ class UserPostsByPkView(APIView):
 class LikePostView(APIView):
     permission_classes=[IsAuthenticated]
 
-    def get(self,request,pk):
+    def post(self,request,pk):
         try:
             post=Post.objects.get(id=pk)
             new_like_post=PostLike.objects.get_or_create(user=request.user,post=post)
@@ -77,5 +74,43 @@ class LikePostView(APIView):
                 return Response({"msg":"Post liked"},status=status.HTTP_200_OK)
         except ObjectDoesNotExist:
             raise status.HTTP_404_NOT_FOUND
+        
+    def get(self,request,pk):
+        try:
+            post = Post.objects.get(id=pk)
+            likes=PostLike.objects.filter(post=post)
+            serializer = PostLikeSerializer(likes,many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Post.DoesNotExist:
+            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
 
+
+
+
+class PostCommentView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def post(self,request,pk):
+        try:
+            post = Post.objects.get(id=pk)
+            data = request.data
+            data['post'] = post
+            serializer = PostCommentSerializer(data=data,context={'request': request})
+            if serializer.is_valid():
+                serializer.save(post=post)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Post.DoesNotExist:
+            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+    
+    def get(self,request,pk):
+        try:
+            post = Post.objects.get(id=pk)
+            comments=postComment.objects.filter(post=post)
+            serializer = PostCommentSerializer(comments,many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Post.DoesNotExist:
+            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
+        
     
