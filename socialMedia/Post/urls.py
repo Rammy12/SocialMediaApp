@@ -1,5 +1,4 @@
-from django.contrib import admin
-from django.urls import path,include
+from django.urls import path
 from Post.views import PostView,PostDetailView,UserPostsByPkView,LikePostView,PostCommentView
 
 urlpatterns = [

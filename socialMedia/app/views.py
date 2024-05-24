@@ -63,6 +63,13 @@ class UserChangePassword(APIView):
 
 class UserFollowView(APIView):
     permission_classes=[IsAuthenticated]
+    def get(self,request,pk):
+        following=UserFollow.objects.filter(user=request.user)
+        follower=UserFollow.objects.filter(follows=request.user)
+        following_serializer=UserFollowSerializer(following,many=True)
+        follower_serializer=UserFollowSerializer(follower,many=True)
+        return Response({"Following":following_serializer.data,"Followers":follower_serializer.data},status=status.HTTP_200_OK)
+    
     def post(self,request,pk):
         try:
             following_user=User.objects.get(pk=pk)
@@ -70,9 +77,9 @@ class UserFollowView(APIView):
             follow_user=UserFollow.objects.get_or_create(user=request.user,follows=following_user)
             if not follow_user[1]:
                 follow_user[0].delete()
-                return Response({"msg":"Followed user"},status=status.HTTP_200_OK)
-            else:
                 return Response({"msg":"Unfollowed user"},status=status.HTTP_200_OK)
+            else:
+                return Response({"msg":"Followed user"},status=status.HTTP_200_OK)
 
         except ObjectDoesNotExist:
             return Response({"error": "User not Exist"}, status=status.HTTP_404_NOT_FOUND)
