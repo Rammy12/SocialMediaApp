@@ -1,5 +1,5 @@
-from app.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,UserChangePasswordSerializer,UserFollowSerializer
-from app.models import User,UserFollow
+from app.serializers import UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer,UserChangePasswordSerializer,UserFollowSerializer,UserProfileImageSerializer
+from app.models import User,UserFollow,UserProfileImage
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -83,3 +83,20 @@ class UserFollowView(APIView):
 
         except ObjectDoesNotExist:
             return Response({"error": "User not Exist"}, status=status.HTTP_404_NOT_FOUND)
+        
+
+
+class ProfileImageUploadView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            user_profile_image = UserProfileImage.objects.get(user=request.user)
+        except UserProfileImage.DoesNotExist:
+            user_profile_image = UserProfileImage(user=request.user)
+        
+        serializer = UserProfileImageSerializer(user_profile_image, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)  
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

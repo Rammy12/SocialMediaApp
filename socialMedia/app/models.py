@@ -43,3 +43,14 @@ class User(AbstractBaseUser):
 class UserFollow(models.Model):
     user=models.ForeignKey(User,null=False,on_delete=models.CASCADE,related_name="src_follow")
     follows=models.ForeignKey(User,null=False,on_delete=models.CASCADE,related_name="Dest_Follow")
+
+
+
+
+# model for ProfileImage
+class UserProfileImage(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE,related_name="image")
+    profile_image = models.ImageField(upload_to='profile_images/',null=True)
+
+    def __str__(self):
+        return self.user.username

@@ -10,6 +10,7 @@ from Post.models import Post,PostLike,postComment
 from django.core.exceptions import ObjectDoesNotExist
 
 
+
 class PostView(APIView):
     permission_classes=[IsAuthenticated]
 
@@ -110,5 +111,3 @@ class PostCommentView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Post.DoesNotExist:
             return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
-        
-    

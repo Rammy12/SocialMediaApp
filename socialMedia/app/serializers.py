@@ -1,6 +1,9 @@
 from rest_framework import serializers
-from app.models import User,UserFollow
+from app.models import User,UserFollow, UserProfileImage
 from django.contrib.auth.hashers import make_password
+
+
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
@@ -25,10 +28,16 @@ class UserLoginSerializer(serializers.ModelSerializer):
         fields=['email','password']
 
 
+class UserProfileImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfileImage
+        fields = ['id','user','profile_image']
+
 class UserProfileSerializer(serializers.ModelSerializer):
+    profile_image=UserProfileImageSerializer(read_only=True,source='image')
     class Meta:
         model=User
-        fields=['id','first_name','last_name','username','email','bio']
+        fields=['id','first_name','last_name','username','email','bio','profile_image']
 
 
 class UserChangePasswordSerializer(serializers.ModelSerializer):
@@ -54,3 +63,5 @@ class UserFollowSerializer(serializers.ModelSerializer):
     class Meta:
         model=UserFollow
         fields = '__all__'
+
+

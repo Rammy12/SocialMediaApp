@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'Post',
+    'storages',
 ]
 # 'corsheaders.middleware.CorsMiddleware',
 MIDDLEWARE = [
@@ -156,3 +158,15 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
 ]
 AUTH_USER_MODEL = 'app.User'
+
+
+## AwS
+AWS_ACCESS_KEY_ID="AKIAVRUVUNHPMFVFKDFR"
+AWS_SECRET_ACCESS_KEY="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"
+AWS_STORAGE_BUCKET_NAME="socialmedia-drf"
+AWS_S3_REGION_NAME ="ap-southeast-2"
+AWS_S3_SIGNATURE_VERSION='s3v4'
+AWS_S3_FILE_OVERWRITE=False
+AWS_DEFAULT_ACL=None
+AWS_S3_VERIFY=True
+DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
