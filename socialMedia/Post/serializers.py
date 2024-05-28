@@ -27,8 +27,8 @@ class PostLikeSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    like=PostLikeSerializer(source='likes')
-    #comment=PostCommentSerializer(source='comments')
+    like=PostLikeSerializer(source='likes',read_only=True)
+    #comment=PostCommentSerializer(source='comments',read_only=True)
     class Meta:
         model=Post
         fields=['title','description','created_at','updated_at','user','file','like']
