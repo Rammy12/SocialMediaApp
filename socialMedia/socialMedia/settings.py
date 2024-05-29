@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*_h=w30f0e+!$eyf!s@@0+s#_4ex$pdnt#^1*-e4lm$(&k@2*3'
+SECRET_KEY =config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -80,13 +80,24 @@ WSGI_APPLICATION = 'socialMedia.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+password=config('PASSWORD')
+user=config('USER')
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'socialmedia',
+        'HOST':'socialmedia.cr8gq8wiy8ls.ap-southeast-2.rds.amazonaws.com',
+        'USER': user,
+        'PASSWORD': password,
+        'PORT': '5432'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -162,10 +173,10 @@ AUTH_USER_MODEL = 'app.User'
 
 
 ## AwS
-AWS_ACCESS_KEY_ID="AKIAVRUVUNHPMFVFKDFR"
-AWS_SECRET_ACCESS_KEY="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"
-AWS_STORAGE_BUCKET_NAME="socialmedia-drf"
-AWS_S3_REGION_NAME ="ap-southeast-2"
+AWS_ACCESS_KEY_ID=config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY=config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME=config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME =config('AWS_S3_REGION_NAME')
 AWS_S3_SIGNATURE_VERSION='s3v4'
 AWS_S3_FILE_OVERWRITE=False
 AWS_DEFAULT_ACL=None
